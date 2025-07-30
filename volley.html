@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>バレーボール フォーメーション解説画像</title>
+    <title>バレーボール フォーメーション（最終版）</title>
     <style>
         * {
             margin: 0;
@@ -25,7 +24,7 @@
             background: white;
             margin: 20px auto;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             padding: 30px;
             box-sizing: border-box;
             position: relative;
@@ -62,7 +61,7 @@
         }
 
         .slide-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             color: #333;
             margin-bottom: 8px;
@@ -84,8 +83,8 @@
             background: linear-gradient(to bottom, #e8f5e8, #d4e5d4);
             margin: 15px auto;
             border-radius: 8px;
-            border-top: 6px solid #333;
-            /* ネット */
+            border-top: 6px solid #333; /* ネット */
+            touch-action: none;
         }
 
         .net-label {
@@ -114,7 +113,7 @@
             position: absolute;
             top: 15px;
             right: 10px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255,255,255,0.8);
             padding: 2px 6px;
             border-radius: 8px;
             font-size: 10px;
@@ -124,7 +123,7 @@
             position: absolute;
             bottom: 15px;
             right: 10px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255,255,255,0.8);
             padding: 2px 6px;
             border-radius: 8px;
             font-size: 10px;
@@ -141,17 +140,10 @@
             font-weight: bold;
             font-size: 11px;
             color: white;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
             transform: translate(-50%, -50%);
             border: 3px solid white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .player:hover {
-            transform: translate(-50%, -50%) scale(1.1);
-            z-index: 20;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .player.male {
@@ -165,34 +157,31 @@
         .player.setter {
             background: linear-gradient(45deg, #43e97b, #38f9d7);
             border: 3px solid #fff;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 0 2px #43e97b;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 2px #43e97b;
             animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 0 2px #43e97b, 0 0 0 0 rgba(67, 233, 123, 0.7);
-            }
-
-            70% {
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 0 2px #43e97b, 0 0 0 8px rgba(67, 233, 123, 0);
-            }
-
-            100% {
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 0 2px #43e97b, 0 0 0 0 rgba(67, 233, 123, 0);
-            }
+        .player.draggable {
+            cursor: grab;
+            z-index: 10;
         }
 
-        .position-number {
-            position: absolute;
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 3px 8px;
-            border-radius: 12px;
-            transform: translate(-50%, -50%);
-            border: 2px solid #333;
+        .player.draggable:active {
+            cursor: grabbing;
+            z-index: 20;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .player.draggable.dragging {
+            z-index: 30;
+            transform: translate(-50%, -50%) scale(1.2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 2px #43e97b, 0 0 0 0 rgba(67, 233, 123, 0.7); }
+            70% { box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 2px #43e97b, 0 0 0 8px rgba(67, 233, 123, 0); }
+            100% { box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 2px #43e97b, 0 0 0 0 rgba(67, 233, 123, 0); }
         }
 
         .explanation {
@@ -236,6 +225,20 @@
             line-height: 1.3;
         }
 
+        .rule-section {
+            background: white;
+            border: 2px solid #4facfe;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .rule-section h4 {
+            color: #4facfe;
+            margin: 0 0 8px 0;
+            font-size: 14px;
+        }
+
         .legend {
             display: flex;
             justify-content: space-around;
@@ -255,20 +258,12 @@
             height: 25px;
             border-radius: 50%;
             border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        .male-color {
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
-        }
-
-        .female-color {
-            background: linear-gradient(45deg, #ff6b6b, #ffa500);
-        }
-
-        .setter-color {
-            background: linear-gradient(45deg, #43e97b, #38f9d7);
-        }
+        .male-color { background: linear-gradient(45deg, #4facfe, #00f2fe); }
+        .female-color { background: linear-gradient(45deg, #ff6b6b, #ffa500); }
+        .setter-color { background: linear-gradient(45deg, #43e97b, #38f9d7); }
 
         .navigation {
             text-align: center;
@@ -294,26 +289,10 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
-
-        /* 基本ルール用のスタイル */
-        .rule-section {
-            background: white;
-            border: 2px solid #4facfe;
-            border-radius: 10px;
-            padding: 12px;
-            margin: 12px 0;
-        }
-
-        .rule-section h4 {
-            color: #4facfe;
-            margin: 0 0 8px 0;
-            font-size: 14px;
-        }
     </style>
 </head>
-
 <body>
-    <!-- スライド1: 初期ローテーション -->
+    <!-- スライド1: 初期ローテーション確認 -->
     <div class="slide" id="slide1">
         <div class="slide-header">
             <div class="slide-number">1</div>
@@ -327,30 +306,24 @@
                 <div class="front-label">前衛</div>
             </div>
             <div class="back-label">後衛</div>
-
+            
             <!-- ポジション4: サイヤ -->
             <div class="player male" style="left: 20%; top: 25%;">サイヤ</div>
-            <div class="position-number" style="left: 20%; top: 8%;">④</div>
-
+            
             <!-- ポジション3: たけちゃん -->
             <div class="player setter" style="left: 50%; top: 25%;">たけ</div>
-            <div class="position-number" style="left: 50%; top: 8%;">③</div>
-
+            
             <!-- ポジション2: みく -->
             <div class="player female" style="left: 80%; top: 25%;">みく</div>
-            <div class="position-number" style="left: 80%; top: 8%;">②</div>
-
+            
             <!-- ポジション5: ゆき -->
             <div class="player female" style="left: 20%; top: 75%;">ゆき</div>
-            <div class="position-number" style="left: 20%; top: 92%;">⑤</div>
-
+            
             <!-- ポジション6: くにみつ -->
             <div class="player male" style="left: 50%; top: 75%;">くに</div>
-            <div class="position-number" style="left: 50%; top: 92%;">⑥</div>
-
+            
             <!-- ポジション1: たい -->
             <div class="player male" style="left: 80%; top: 75%;">たい</div>
-            <div class="position-number" style="left: 80%; top: 92%;">①</div>
         </div>
 
         <div class="legend">
@@ -382,19 +355,237 @@
                 <li><strong>ゆき・くにみつ・たい：</strong>レシーブ・カバー</li>
             </ul>
         </div>
+    </div>
 
-        <div class="rule-section">
-            <h4>🔄 ローテーションについて</h4>
-            <p style="font-size: 12px; line-height: 1.4;">
-                サーブ権を獲得したら、全員が時計回りに1つずつ移動。
-                この基本配置から6つのローテーションが始まります。
-            </p>
+    <!-- スライド2: サーブレシーブフォーメーション -->
+    <div class="slide" id="slide2" style="display: none;">
+        <div class="slide-header">
+            <div class="slide-number">2</div>
+            <h2 class="slide-title">🏐 サーブレシーブ<br>フォーメーション</h2>
+            <p class="slide-subtitle">頑張ってあげようサーブレシーブ</p>
+        </div>
+
+        <div class="court">
+            <div class="net-label">ネット（相手サーブ）</div>
+            <div class="front-zone">
+                <div class="front-label">前衛</div>
+            </div>
+            <div class="back-label">後衛</div>
+            
+            <!-- サイヤ：レフト攻撃準備 -->
+            <div class="player male" style="left: 15%; top: 40%;">サイヤ</div>
+            
+            <!-- みく：センター（BクイックやAクイック） -->
+            <div class="player female" style="left: 55%; top: 40%;">みく</div>
+            
+            <!-- たけちゃん：セッター（ネット際移動準備） -->
+            <div class="player setter" style="left: 40%; top: 15%;">たけ</div>
+            
+            <!-- たい：W型レシーブ左 -->
+            <div class="player male" style="left: 90%; top: 50%;">たい</div>
+            
+            <!-- ゆき：W型レシーブ右下 -->
+            <div class="player female" style="left: 30%; top: 70%;">ゆき</div>
+            
+            <!-- くにみつ：バックアタック準備・W型レシーブ右 -->
+            <div class="player male" style="left: 70%; top: 70%;">くに</div>
+        </div>
+
+        <div class="explanation">
+            <h3>🎯 頑張ってあげようサーブレシーブ</h3>
+            <p><strong>後衛3人で基本的にレシーブ、前二人は攻撃準備</strong>、前衛は多彩な攻撃パターンを準備。セッターが素早くネット際へ移動してセットアップ。</p>
+        </div>
+
+        <div class="key-points">
+            <h4>📋 役割分担</h4>
+            <ul>
+                <li><strong>サイヤ：</strong>レフト攻撃準備</li>
+                <li><strong>みく：</strong>センター攻撃（BクイックやAクイックまたはブロード）</li>
+                <li><strong>たけちゃん：</strong>ネット際移動・セット</li>
+                <li><strong>たい：</strong>バックアタック準備・レシーブ</li>
+                <li><strong>くにみつ・ゆき：</strong>レシーブ</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- スライド3: 2枚ブロック時のスパイクレシーブ -->
+    <div class="slide" id="slide3" style="display: none;">
+        <div class="slide-header">
+            <div class="slide-number">3</div>
+            <h2 class="slide-title">2枚ブロック時<br>スパイクレシーブ</h2>
+            <p class="slide-subtitle">基本の守備フォーメーション</p>
+        </div>
+
+        <div class="court">
+            <div class="net-label">ネット（相手レフト攻撃）</div>
+            <div class="front-zone">
+                <div class="front-label">前衛（ブロック）</div>
+            </div>
+            <div class="back-label">後衛（レシーブ）</div>
+            
+            <!-- サイヤ・みく：2枚ブロック（クロス閉め） -->
+            <div class="player male" style="left: 55%; top: 8%;">サイヤ</div>
+            <div class="player female" style="left: 70%; top: 8%;">みく</div>
+            
+            <!-- たけちゃん：カバー -->
+            <div class="player setter" style="left: 60%; top: 30%;">たけ</div>
+            
+            <!-- たい：クロス守備（左側） -->
+            <div class="player male" style="left: 15%; top: 55%;">たい</div>
+            
+            <!-- ゆき：センター守備（真ん中） -->
+            <div class="player female" style="left: 35%; top: 80%;">ゆき</div>
+            
+            <!-- くにみつ：ストレート守備（右側） -->
+            <div class="player male" style="left: 85%; top: 70%;">くに</div>
+        </div>
+
+        <div class="explanation">
+            <h3>🛡️ 2枚ブロック時の守備</h3>
+            <p>相手レフト攻撃に対する基本守備。<strong>ブロック2人がクロスを閉める！</strong>、前が男子２枚の時は男子でブロック。残りの女子がたけちゃんのポジ</p>
+        </div>
+
+        <div class="key-points">
+            <h4>📋 戦術的役割分担</h4>
+            <ul>
+                <li><strong>サイヤ・みく：</strong>ブロック（クロス閉め）</li>
+                <li><strong>たけちゃん：</strong>前衛カバー・セッター準備</li>
+                <li><strong>くにみつ：</strong>ストレート対応（右側）</li>
+                <li><strong>ゆき：</strong>（ワンタッチなどのフォロー）</li>
+                <li><strong>たい：</strong>クロス守備（強打レシーブポジ）</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- スライド4: 1枚ブロック時のスパイクレシーブ -->
+    <div class="slide" id="slide4" style="display: none;">
+        <div class="slide-header">
+            <div class="slide-number">4</div>
+            <h2 class="slide-title">1枚ブロック時<br>スパイクレシーブ</h2>
+            <p class="slide-subtitle">間に合わない場合の守備</p>
+        </div>
+
+        <div class="court">
+            <div class="net-label">ネット（相手攻撃）</div>
+            <div class="front-zone">
+                <div class="front-label">前衛</div>
+            </div>
+            <div class="back-label">後衛</div>
+            
+            <!-- サイヤ：前衛左（攻撃準備） -->
+            <div class="player male" style="left: 30%; top: 20%;">サイヤ</div>
+            
+            <!-- みく：1人ブロック -->
+            <div class="player female" style="left: 75%; top: 8%;">みく</div>
+            
+            <!-- たけちゃん：カバー・つなぎ役（前衛中央やや後ろ） -->
+            <div class="player setter" style="left: 60%; top: 30%;">たけ</div>
+            
+            <!-- たい：後衛レシーブ左 -->
+            <div class="player male" style="left: 15%; top: 55%;">たい</div>
+            
+            <!-- くにみつ：後衛レシーブ右 -->
+            <div class="player male" style="left: 85%; top: 70%;">くに</div>
+            
+            <!-- ゆき：後衛レシーブ中央後 -->
+            <div class="player female" style="left: 35%; top: 80%;">ゆき</div>
+        </div>
+
+        <div class="explanation">
+            <h3>🛡️ 1枚ブロック時の守備</h3>
+            <p>ブロックが間に合わない時の対応。<strong>1人でブロック(クロス意識）</strong>、間に合わなかったら切り替えてレシーブ体制に入ろう！</p>
+        </div>
+
+        <div class="key-points">
+            <h4>📋 各自の役割</h4>
+            <ul>
+                <li><strong>みく：</strong>1人ブロック（コース限定）がんばろう</li>
+                <li><strong>サイヤ：</strong>左でレシーブ体制がんばろう</li>
+                <li><strong>たけちゃん：</strong>カバー・つなぎ・セッター準備頑張ろう</li>
+                <li><strong>後衛3人：</strong>スパイクレシーブ・拾いがんばろう</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- スライド5: まとめ・注意点 -->
+    <div class="slide" id="slide5" style="display: none;">
+        <div class="slide-header">
+            <div class="slide-number">5</div>
+            <h2 class="slide-title">まとめ・注意点</h2>
+            <p class="slide-subtitle">練習で意識すること</p>
+        </div>
+
+        <div class="key-points">
+            <h4>🎯 練習のポイント</h4>
+            <ul>
+                <li><strong>サーブレシーブ：</strong>頑張ってあげようを徹底</li>
+                <li><strong>2枚ブロック：</strong>クロス閉めを意識</li>
+                <li><strong>1枚ブロック：</strong>各自の役割分担を練習</li>
+                <li><strong>セッター：</strong>たけちゃんの動きを全員で把握</li>
+                <li><strong>スパイク：</strong>ミスってもいいので打って返そう</li>
+            </ul>
+        </div>
+
+
+        <div class="explanation">
+            <h3>🔥 チーム力向上のために</h3>
+            <p>基本的な<strong>3つのフォーメーション</strong>をしっかり覚えて、状況に応じた正確なポジショニングを心がけましょう！</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; padding: 15px; background: linear-gradient(45deg, #43e97b, #38f9d7); border-radius: 12px; color: white;">
+            <h3 style="margin: 0 0 8px 0; font-size: 16px;">🏐 頑張ろう！</h3>
+            <p style="margin: 0; font-size: 13px;">次はインタラクティブ練習ページ →</p>
+        </div>
+    </div>
+
+    <!-- スライド6: インタラクティブ練習 -->
+    <div class="slide" id="slide6" style="display: none;">
+        <div class="slide-header">
+            <div class="slide-number">6</div>
+            <h2 class="slide-title">🎮 インタラクティブ<br>フォーメーション練習</h2>
+            <p class="slide-subtitle">プレイヤーをタップして移動できます</p>
+        </div>
+
+        <div style="text-align: center; margin: 10px 0;">
+            <button class="nav-btn" onclick="resetToBasic()" style="margin: 3px; padding: 8px 15px; font-size: 12px;">基本配置</button>
+            <button class="nav-btn" onclick="resetToServeReceive()" style="margin: 3px; padding: 8px 15px; font-size: 12px;">サーブレシーブ</button>
+            <button class="nav-btn" onclick="resetToSpikeReceive()" style="margin: 3px; padding: 8px 15px; font-size: 12px;">2枚ブロック</button>
+            <button class="nav-btn" onclick="resetToOneBlock()" style="margin: 3px; padding: 8px 15px; font-size: 12px;">1枚ブロック</button>
+        </div>
+
+        <div class="court" id="interactiveCourt">
+            <div class="net-label">ネット</div>
+            <div class="front-zone">
+                <div class="front-label">前衛</div>
+            </div>
+            <div class="back-label">後衛</div>
+            
+            <div class="player male draggable" id="player-サイヤ" style="left: 20%; top: 25%;">サイヤ</div>
+            <div class="player setter draggable" id="player-たけちゃん" style="left: 50%; top: 25%;">たけ</div>
+            <div class="player female draggable" id="player-みく" style="left: 80%; top: 25%;">みく</div>
+            <div class="player female draggable" id="player-ゆき" style="left: 20%; top: 75%;">ゆき</div>
+            <div class="player male draggable" id="player-くにみつ" style="left: 50%; top: 75%;">くに</div>
+            <div class="player male draggable" id="player-たい" style="left: 80%; top: 75%;">たい</div>
+        </div>
+
+        <div class="explanation">
+            <h3>🎯 使い方</h3>
+            <p>プレイヤーを<strong>タップ&ドラッグ</strong>して自由に配置変更できます。上のボタンで各フォーメーションに切り替え可能。</p>
+        </div>
+
+        <div class="key-points">
+            <h4>💡 練習のコツ</h4>
+            <ul>
+                <li>実際の試合を想定して配置を試してみよう</li>
+                <li>チームメンバーと一緒に最適な配置を考えよう</li>
+                <li>相手の攻撃パターンに応じた守備を練習しよう</li>
+            </ul>
         </div>
     </div>
 
     <div class="navigation">
         <button class="nav-btn" onclick="prevSlide()" id="prevBtn">◀ 前へ</button>
-        <span id="slideCounter">1 / 14</span>
+        <span id="slideCounter">1 / 6</span>
         <button class="nav-btn" onclick="nextSlide()" id="nextBtn">次へ ▶</button>
     </div>
 
@@ -405,56 +596,37 @@
 
     <script>
         let currentSlide = 1;
-        const totalSlides = 15; // インタラクティブページ追加で15枚に
+        const totalSlides = 6;
 
-        // チームメンバー情報
-        const players = {
-            'サイヤ': { gender: 'male', position: 'アタッカー' },
-            'たけちゃん': { gender: 'female', position: 'セッター', special: true },
-            'みく': { gender: 'female', position: 'アタッカー' },
-            'ゆき': { gender: 'female', position: 'アタッカー' },
-            'くにみつ': { gender: 'male', position: 'アタッカー' },
-            'たい': { gender: 'male', position: 'リベロ' }
-        };
-
-        // 各ローテーションでのポジション配置（①②③④⑤⑥の順）
-        const rotations = {
-            1: ['たい', 'みく', 'たけちゃん', 'サイヤ', 'ゆき', 'くにみつ'],
-            2: ['くにみつ', 'たい', 'みく', 'たけちゃん', 'サイヤ', 'ゆき'],
-            3: ['ゆき', 'くにみつ', 'たい', 'みく', 'たけちゃん', 'サイヤ'],
-            4: ['サイヤ', 'ゆき', 'くにみつ', 'たい', 'みく', 'たけちゃん'],
-            5: ['たけちゃん', 'サイヤ', 'ゆき', 'くにみつ', 'たい', 'みく'],
-            6: ['みく', 'たけちゃん', 'サイヤ', 'ゆき', 'くにみつ', 'たい']
-        };
-
-        // 自陣コートでのポジション座標（%）
-        const positions = [
-            { x: 80, y: 75, label: '①' },  // ポジション1（後衛右）
-            { x: 80, y: 25, label: '②' },  // ポジション2（前衛右）
-            { x: 50, y: 25, label: '③' },  // ポジション3（前衛中央）
-            { x: 20, y: 25, label: '④' },  // ポジション4（前衛左）
-            { x: 20, y: 75, label: '⑤' },  // ポジション5（後衛左）
-            { x: 50, y: 75, label: '⑥' }   // ポジション6（後衛中央）
-        ];
+        // ドラッグ機能の変数
+        let isDragging = false;
+        let currentDragElement = null;
+        let offsetX = 0;
+        let offsetY = 0;
 
         function showSlide(slideNum) {
             // 全スライドを非表示
             document.querySelectorAll('.slide').forEach(slide => {
                 slide.style.display = 'none';
             });
-
+            
             // 指定されたスライドを表示
             const targetSlide = document.getElementById(`slide${slideNum}`);
             if (targetSlide) {
                 targetSlide.style.display = 'block';
             }
-
+            
             // ナビゲーション更新
             document.getElementById('slideCounter').textContent = `${slideNum} / ${totalSlides}`;
             document.getElementById('prevBtn').disabled = slideNum === 1;
             document.getElementById('nextBtn').disabled = slideNum === totalSlides;
-
+            
             currentSlide = slideNum;
+            
+            // インタラクティブページの場合、ドラッグ機能を初期化
+            if (slideNum === 6) {
+                setTimeout(initDragFunctionality, 100);
+            }
         }
 
         function nextSlide() {
@@ -469,37 +641,6 @@
             }
         }
 
-        function createRotationSlides() {
-            const slideContainer = document.body;
-
-            // 各ローテーションのサーブレシーブとスパイクレシーブを作成
-            for (let rotation = 1; rotation <= 6; rotation++) {
-                // サーブレシーブスライド
-                const serveReceiveSlide = createServeReceiveSlide(rotation);
-                slideContainer.insertBefore(serveReceiveSlide, document.querySelector('.navigation'));
-
-                // スパイクレシーブスライド
-                const spikeReceiveSlide = createSpikeReceiveSlide(rotation);
-                slideContainer.insertBefore(spikeReceiveSlide, document.querySelector('.navigation'));
-            }
-
-            // まとめスライド
-            const summarySlide = createSummarySlide();
-            slideContainer.insertBefore(summarySlide, document.querySelector('.navigation'));
-
-            // インタラクティブスライド
-            const interactiveSlide = createInteractiveSlide();
-            slideContainer.insertBefore(interactiveSlide, document.querySelector('.navigation'));
-        }
-
-        // ドラッグ機能の変数
-        let isDragging = false;
-        let currentDragElement = null;
-        let startX = 0;
-        let startY = 0;
-        let offsetX = 0;
-        let offsetY = 0;
-
         // ドラッグ機能の初期化
         function initDragFunctionality() {
             const court = document.getElementById('interactiveCourt');
@@ -507,10 +648,10 @@
 
             court.addEventListener('mousedown', handleStart);
             court.addEventListener('touchstart', handleStart, { passive: false });
-
+            
             document.addEventListener('mousemove', handleMove);
             document.addEventListener('touchmove', handleMove, { passive: false });
-
+            
             document.addEventListener('mouseup', handleEnd);
             document.addEventListener('touchend', handleEnd);
         }
@@ -518,43 +659,40 @@
         function handleStart(e) {
             e.preventDefault();
             const target = e.target;
-
+            
             if (target.classList.contains('draggable')) {
                 isDragging = true;
                 currentDragElement = target;
                 target.classList.add('dragging');
-
+                
                 const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
                 const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
-
+                
                 const rect = target.getBoundingClientRect();
                 offsetX = clientX - rect.left - rect.width / 2;
                 offsetY = clientY - rect.top - rect.height / 2;
-
-                startX = clientX;
-                startY = clientY;
             }
         }
 
         function handleMove(e) {
             if (!isDragging || !currentDragElement) return;
-
+            
             e.preventDefault();
-
+            
             const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
             const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
-
+            
             const court = document.getElementById('interactiveCourt');
             const courtRect = court.getBoundingClientRect();
-
+            
             // コート内での相対位置を計算
             const relativeX = clientX - courtRect.left - offsetX;
             const relativeY = clientY - courtRect.top - offsetY;
-
+            
             // パーセンテージに変換（コート境界内に制限）
             const percentX = Math.max(5, Math.min(95, (relativeX / courtRect.width) * 100));
             const percentY = Math.max(5, Math.min(95, (relativeY / courtRect.height) * 100));
-
+            
             currentDragElement.style.left = percentX + '%';
             currentDragElement.style.top = percentY + '%';
         }
@@ -577,7 +715,7 @@
                 { id: 'player-くにみつ', x: 50, y: 75 },
                 { id: 'player-たい', x: 80, y: 75 }
             ];
-
+            
             players.forEach(player => {
                 const element = document.getElementById(player.id);
                 if (element) {
@@ -589,14 +727,14 @@
 
         function resetToServeReceive() {
             const players = [
-                { id: 'player-サイヤ', x: 25, y: 25 },
-                { id: 'player-たけちゃん', x: 50, y: 20 },
-                { id: 'player-みく', x: 75, y: 25 },
-                { id: 'player-ゆき', x: 30, y: 65 },
-                { id: 'player-くにみつ', x: 50, y: 80 },
-                { id: 'player-たい', x: 70, y: 65 }
+                { id: 'player-サイヤ', x: 20, y: 25 },
+                { id: 'player-たけちゃん', x: 50, y: 15 },
+                { id: 'player-みく', x: 80, y: 25 },
+                { id: 'player-たい', x: 25, y: 65 },
+                { id: 'player-ゆき', x: 75, y: 65 },
+                { id: 'player-くにみつ', x: 50, y: 80 }
             ];
-
+            
             players.forEach(player => {
                 const element = document.getElementById(player.id);
                 if (element) {
@@ -611,11 +749,11 @@
                 { id: 'player-サイヤ', x: 55, y: 8 },
                 { id: 'player-たけちゃん', x: 40, y: 28 },
                 { id: 'player-みく', x: 70, y: 8 },
-                { id: 'player-ゆき', x: 15, y: 70 },
-                { id: 'player-くにみつ', x: 85, y: 70 },
-                { id: 'player-たい', x: 50, y: 85 }
+                { id: 'player-たい', x: 15, y: 70 },
+                { id: 'player-ゆき', x: 50, y: 85 },
+                { id: 'player-くにみつ', x: 85, y: 70 }
             ];
-
+            
             players.forEach(player => {
                 const element = document.getElementById(player.id);
                 if (element) {
@@ -625,488 +763,35 @@
             });
         }
 
-        function createServeReceiveSlide(rotationNum) {
-            const slide = document.createElement('div');
-            slide.className = 'slide';
-            slide.id = `slide${rotationNum * 2}`;
-            slide.style.display = 'none';
-
-            const currentPlayers = rotations[rotationNum];
-            const setterPosition = currentPlayers.indexOf('たけちゃん') + 1;
-            const isSetterFront = setterPosition <= 3;
-
-            slide.innerHTML = `
-                <div class="slide-header">
-                    <div class="slide-number">${rotationNum * 2}</div>
-                    <h2 class="slide-title">ローテーション ${rotationNum}<br>サーブレシーブ</h2>
-                    <p class="slide-subtitle">W型フォーメーション</p>
-                </div>
-
-                <div class="court">
-                    <div class="net-label">ネット（相手サーブ）</div>
-                    <div class="front-zone">
-                        <div class="front-label">前衛</div>
-                    </div>
-                    <div class="back-label">後衛</div>
-                    ${createServeReceiveHTML(currentPlayers)}
-                </div>
-
-                <div class="explanation">
-                    <h3>🎯 サーブレシーブ体制</h3>
-                    <p>後衛3人でW型を作り確実にレシーブ。セッター（たけちゃん）はネット際へ移動準備、前衛は攻撃準備。</p>
-                </div>
-
-                <div class="key-points">
-                    <h4>📋 役割分担</h4>
-                    <ul>
-                        ${createServeReceiveRoles(currentPlayers)}
-                    </ul>
-                </div>
-            `;
-
-            return slide;
-        }
-
-        function createSpikeReceiveSlide(rotationNum) {
-            const slide = document.createElement('div');
-            slide.className = 'slide';
-            slide.id = `slide${rotationNum * 2 + 1}`;
-            slide.style.display = 'none';
-
-            const currentPlayers = rotations[rotationNum];
-
-            slide.innerHTML = `
-                <div class="slide-header">
-                    <div class="slide-number">${rotationNum * 2 + 1}</div>
-                    <h2 class="slide-title">ローテーション ${rotationNum}<br>スパイクレシーブ</h2>
-                    <p class="slide-subtitle">ブロック・守備体制</p>
-                </div>
-
-                <div class="court">
-                    <div class="net-label">ネット（相手攻撃）</div>
-                    <div class="front-zone">
-                        <div class="front-label">前衛（ブロック）</div>
-                    </div>
-                    <div class="back-label">後衛（レシーブ）</div>
-                    ${createSpikeReceiveHTML(currentPlayers)}
-                </div>
-
-                <div class="explanation">
-                    <h3>🛡️ スパイクレシーブ体制</h3>
-                    <p>相手レフトからの攻撃に対応。ブロック2人が右側に集中、後衛は攻撃コースをカバーする配置で守備。</p>
-                </div>
-
-                <div class="key-points">
-                    <h4>📋 守備時の動き</h4>
-                    <ul>
-                        ${createSpikeReceiveRoles(currentPlayers)}
-                    </ul>
-                </div>
-            `;
-
-            return slide;
-        }
-
-        function createServeReceiveHTML(currentPlayers) {
-            // サーブレシーブ時の配置（W型）
-            let html = '';
-
-            try {
-                const serveReceivePositions = getServeReceivePositions(currentPlayers);
-
-                currentPlayers.forEach((playerName, index) => {
-                    const playerInfo = players[playerName];
-                    const shortName = playerName === 'たけちゃん' ? 'たけ' :
-                        playerName === 'くにみつ' ? 'くに' : playerName;
-                    const genderClass = playerInfo.gender === 'male' ? 'male' : 'female';
-                    const setterClass = playerName === 'たけちゃん' ? ' setter' : '';
-
-                    // 位置情報があるかチェック
-                    const pos = serveReceivePositions[playerName];
-                    if (pos && pos.x !== undefined && pos.y !== undefined) {
-                        html += `
-                            <div class="player ${genderClass}${setterClass}" style="left: ${pos.x}%; top: ${pos.y}%;">${shortName}</div>
-                        `;
-                    } else {
-                        // フォールバック: 基本ローテーション位置
-                        html += `
-                            <div class="player ${genderClass}${setterClass}" style="left: ${positions[index].x}%; top: ${positions[index].y}%;">${shortName}</div>
-                        `;
-                    }
-                });
-            } catch (error) {
-                console.error('Error in createServeReceiveHTML:', error);
-                // エラー時は基本ローテーション位置で表示
-                currentPlayers.forEach((playerName, index) => {
-                    const playerInfo = players[playerName];
-                    const shortName = playerName === 'たけちゃん' ? 'たけ' :
-                        playerName === 'くにみつ' ? 'くに' : playerName;
-                    const genderClass = playerInfo.gender === 'male' ? 'male' : 'female';
-                    const setterClass = playerName === 'たけちゃん' ? ' setter' : '';
-
-                    html += `
-                        <div class="player ${genderClass}${setterClass}" style="left: ${positions[index].x}%; top: ${positions[index].y}%;">${shortName}</div>
-                    `;
-                });
-            }
-
-            return html;
-        }
-
-        function createSpikeReceiveHTML(currentPlayers) {
-            // スパイクレシーブ時の戦術的配置
-            const spikeReceivePositions = getSpikeReceivePositions(currentPlayers);
-            let html = '';
-
-            currentPlayers.forEach((playerName, index) => {
-                const playerInfo = players[playerName];
-                const shortName = playerName === 'たけちゃん' ? 'たけ' :
-                    playerName === 'くにみつ' ? 'くに' : playerName;
-                const genderClass = playerInfo.gender === 'male' ? 'male' : 'female';
-                const setterClass = playerName === 'たけちゃん' ? ' setter' : '';
-
-                // 戦術的位置があるかチェック
-                const pos = spikeReceivePositions[playerName];
-                if (pos) {
-                    html += `
-                        <div class="player ${genderClass}${setterClass}" style="left: ${pos.x}%; top: ${pos.y}%;">${shortName}</div>
-                    `;
-                } else {
-                    // フォールバック: 基本ローテーション位置
-                    html += `
-                        <div class="player ${genderClass}${setterClass}" style="left: ${positions[index].x}%; top: ${positions[index].y}%;">${shortName}</div>
-                    `;
+        function resetToOneBlock() {
+            const players = [
+                { id: 'player-サイヤ', x: 30, y: 25 },
+                { id: 'player-たけちゃん', x: 50, y: 40 },
+                { id: 'player-みく', x: 70, y: 8 },
+                { id: 'player-たい', x: 20, y: 75 },
+                { id: 'player-ゆき', x: 50, y: 85 },
+                { id: 'player-くにみつ', x: 75, y: 75 }
+            ];
+            
+            players.forEach(player => {
+                const element = document.getElementById(player.id);
+                if (element) {
+                    element.style.left = player.x + '%';
+                    element.style.top = player.y + '%';
                 }
             });
-
-            return html;
         }
-
-        function getSpikeReceivePositions(currentPlayers) {
-            const positions = {};
-
-            const setterPosition = currentPlayers.indexOf('たけちゃん') + 1;
-            const isSetterFront = setterPosition <= 3;
-
-            // 前衛と後衛を分ける
-            const frontPlayers = [];
-            const backPlayers = [];
-
-            currentPlayers.forEach((playerName, index) => {
-                if (index === 1 || index === 2 || index === 3) {
-                    frontPlayers.push(playerName);
-                } else {
-                    backPlayers.push(playerName);
-                }
-            });
-
-            // 前衛のブロック・カバー配置
-            if (isSetterFront) {
-                // たけちゃんが前衛の時: 他女性1 + 男性1でブロック、たけちゃんがカバー
-                const otherFrontPlayers = frontPlayers.filter(name => name !== 'たけちゃん');
-                const frontFemale = otherFrontPlayers.find(name => players[name].gender === 'female');
-                const frontMale = otherFrontPlayers.find(name => players[name].gender === 'male');
-
-                // 相手レフト攻撃に対するブロック（クロスを閉める）
-                if (frontFemale) positions[frontFemale] = { x: 55, y: 8 };
-                if (frontMale) positions[frontMale] = { x: 70, y: 8 };
-
-                // カバー（たけちゃん）
-                positions['たけちゃん'] = { x: 40, y: 28 };
-
-            } else {
-                // たけちゃんが後衛の時: 男性2人でブロック、女性1人がカバー
-                const frontMales = frontPlayers.filter(name => players[name].gender === 'male');
-                const frontFemale = frontPlayers.find(name => players[name].gender === 'female');
-
-                // 相手レフト攻撃に対するブロック（クロスを閉める）
-                if (frontMales[0]) positions[frontMales[0]] = { x: 55, y: 8 };
-                if (frontMales[1]) positions[frontMales[1]] = { x: 70, y: 8 };
-
-                // カバー（前衛女性）
-                if (frontFemale) positions[frontFemale] = { x: 40, y: 28 };
-            }
-
-            // 後衛の戦術的配置（相手レフト攻撃対応）
-            backPlayers.forEach(playerName => {
-                if (playerName === 'たけちゃん' || playerName === 'くにみつ') {
-                    // ストレート守備（右側）
-                    positions[playerName] = { x: 85, y: 70 };
-                } else if (playerName === 'みく' || playerName === 'ゆき') {
-                    // センター守備（真ん中）
-                    positions[playerName] = { x: 50, y: 85 };
-                } else if (playerName === 'たい' || playerName === 'サイヤ') {
-                    // クロス守備（左側）
-                    positions[playerName] = { x: 15, y: 70 };
-                }
-            });
-
-            return positions;
-        }
-
-        function getServeReceivePositions(currentPlayers) {
-            const positions = {};
-            const setterPosition = currentPlayers.indexOf('たけちゃん') + 1;
-            const isSetterFront = setterPosition <= 3;
-
-            // 前衛と後衛を分ける
-            const frontPlayers = [];
-            const backPlayers = [];
-
-            currentPlayers.forEach((playerName, index) => {
-                if (index === 1 || index === 2 || index === 3) {
-                    frontPlayers.push(playerName);
-                } else {
-                    backPlayers.push(playerName);
-                }
-            });
-
-            if (isSetterFront) {
-                // セッターが前衛の時：セッターはネット際へ移動、他の前衛2人は攻撃準備
-                positions['たけちゃん'] = { x: 50, y: 20 };
-
-                // 前衛の他の2人は左右に分かれて攻撃準備
-                const otherFrontPlayers = frontPlayers.filter(name => name !== 'たけちゃん');
-                if (otherFrontPlayers.length >= 1) positions[otherFrontPlayers[0]] = { x: 25, y: 25 };
-                if (otherFrontPlayers.length >= 2) positions[otherFrontPlayers[1]] = { x: 75, y: 25 };
-
-                // 後衛3人でW型レシーブ
-                if (backPlayers.length >= 1) positions[backPlayers[0]] = { x: 70, y: 65 };  // 右
-                if (backPlayers.length >= 2) positions[backPlayers[1]] = { x: 30, y: 65 };  // 左
-                if (backPlayers.length >= 3) positions[backPlayers[2]] = { x: 50, y: 80 };  // 中央後
-
-            } else {
-                // セッターが後衛の時：後衛でレシーブ参加、前衛は攻撃準備
-                // 前衛3人は攻撃準備
-                if (frontPlayers.length >= 1) positions[frontPlayers[0]] = { x: 20, y: 25 };
-                if (frontPlayers.length >= 2) positions[frontPlayers[1]] = { x: 50, y: 20 };
-                if (frontPlayers.length >= 3) positions[frontPlayers[2]] = { x: 80, y: 25 };
-
-                // 後衛でのレシーブ配置（セッターの位置により調整）
-                if (setterPosition === 1) {
-                    // セッターが後衛右の場合
-                    positions['たけちゃん'] = { x: 65, y: 70 };
-                    const otherBackPlayers = backPlayers.filter(name => name !== 'たけちゃん');
-                    if (otherBackPlayers.length >= 1) positions[otherBackPlayers[0]] = { x: 35, y: 65 };
-                    if (otherBackPlayers.length >= 2) positions[otherBackPlayers[1]] = { x: 50, y: 85 };
-                } else if (setterPosition === 5) {
-                    // セッターが後衛左の場合
-                    positions['たけちゃん'] = { x: 35, y: 70 };
-                    const otherBackPlayers = backPlayers.filter(name => name !== 'たけちゃん');
-                    if (otherBackPlayers.length >= 1) positions[otherBackPlayers[0]] = { x: 65, y: 65 };
-                    if (otherBackPlayers.length >= 2) positions[otherBackPlayers[1]] = { x: 50, y: 85 };
-                } else {
-                    // セッターが後衛中央の場合
-                    positions['たけちゃん'] = { x: 50, y: 75 };
-                    const otherBackPlayers = backPlayers.filter(name => name !== 'たけちゃん');
-                    if (otherBackPlayers.length >= 1) positions[otherBackPlayers[0]] = { x: 30, y: 65 };
-                    if (otherBackPlayers.length >= 2) positions[otherBackPlayers[1]] = { x: 70, y: 65 };
-                }
-            }
-
-            return positions;
-        }
-
-        function createServeReceiveRoles(currentPlayers) {
-            let html = '';
-            const setterPosition = currentPlayers.indexOf('たけちゃん') + 1;
-            const isSetterFront = setterPosition <= 3;
-
-            if (isSetterFront) {
-                html += '<li><strong>たけちゃん：</strong>ネット際移動・セット準備</li>';
-            } else {
-                html += '<li><strong>たけちゃん：</strong>サーブレシーブ・セット準備</li>';
-            }
-
-            currentPlayers.forEach((playerName, index) => {
-                if (playerName !== 'たけちゃん') {
-                    const isBack = index === 0 || index === 4 || index === 5;
-                    const role = isBack ? 'サーブレシーブ（W型）' : 'アタック準備';
-                    html += `<li><strong>${playerName}：</strong>${role}</li>`;
-                }
-            });
-
-            return html;
-        }
-
-        function createSpikeReceiveRoles(currentPlayers) {
-            let html = '';
-            const setterPosition = currentPlayers.indexOf('たけちゃん') + 1;
-            const isSetterFront = setterPosition <= 3;
-
-            // 前衛と後衛を分ける
-            const frontPlayers = [];
-            const backPlayers = [];
-
-            currentPlayers.forEach((playerName, index) => {
-                if (index === 1 || index === 2 || index === 3) {
-                    frontPlayers.push(playerName);
-                } else {
-                    backPlayers.push(playerName);
-                }
-            });
-
-            // 前衛の役割
-            if (isSetterFront) {
-                html += '<li><strong>たけちゃん：</strong>前衛カバー・セッター準備</li>';
-
-                const otherFrontPlayers = frontPlayers.filter(name => name !== 'たけちゃん');
-                otherFrontPlayers.forEach(playerName => {
-                    html += `<li><strong>${playerName}：</strong>ブロック（クロス閉め）</li>`;
-                });
-
-            } else {
-                const frontMales = frontPlayers.filter(name => players[name].gender === 'male');
-                const frontFemale = frontPlayers.find(name => players[name].gender === 'female');
-
-                frontMales.forEach(playerName => {
-                    html += `<li><strong>${playerName}：</strong>ブロック（クロス閉め）</li>`;
-                });
-
-                if (frontFemale) {
-                    html += `<li><strong>${frontFemale}：</strong>前衛カバー</li>`;
-                }
-            }
-
-            // 後衛の戦術的役割（相手レフト攻撃対応）
-            backPlayers.forEach(playerName => {
-                if (playerName === 'たけちゃん' || playerName === 'くにみつ') {
-                    html += `<li><strong>${playerName}：</strong>ストレート守備（右側）</li>`;
-                } else if (playerName === 'みく' || playerName === 'ゆき') {
-                    html += `<li><strong>${playerName}：</strong>センター守備（真ん中）</li>`;
-                } else if (playerName === 'たい' || playerName === 'サイヤ') {
-                    html += `<li><strong>${playerName}：</strong>クロス守備（左側）</li>`;
-                }
-            });
-
-            return html;
-        }
-
-        function createSummarySlide() {
-            const slide = document.createElement('div');
-            slide.className = 'slide';
-            slide.id = 'slide14';
-            slide.style.display = 'none';
-            slide.innerHTML = `
-                <div class="slide-header">
-                    <div class="slide-number">14</div>
-                    <h2 class="slide-title">まとめ・注意点</h2>
-                    <p class="slide-subtitle">練習で意識すること</p>
-                </div>
-
-                <div class="key-points">
-                    <h4>🎯 練習のポイント</h4>
-                    <ul>
-                        <li><strong>ローテーション：</strong>サーブ後は必ず時計回り</li>
-                        <li><strong>サーブレシーブ：</strong>W型フォーメーションを徹底</li>
-                        <li><strong>スパイクレシーブ：</strong>前衛ブロック・後衛レシーブ</li>
-                        <li><strong>セッター：</strong>たけちゃんの動きを全員で把握</li>
-                    </ul>
-                </div>
-
-                <div class="rule-section">
-                    <h4>⚠️ よくある間違い</h4>
-                    <div style="font-size: 12px; line-height: 1.5;">
-                        <p>• ローテーション忘れ（特にサーブ後）<br>
-                        • サーブレシーブ時のW型崩れ<br>
-                        • 前衛・後衛の役割混同<br>
-                        • セッターの位置確認不足</p>
-                    </div>
-                </div>
-
-                <div class="rule-section">
-                    <h4>📱 このフォーメーション表の使い方</h4>
-                    <div style="font-size: 12px; line-height: 1.5;">
-                        <p>• 練習前にチーム全員で確認<br>
-                        • 試合中のタイムアウト時に参照<br>
-                        • 新メンバーへの説明資料として活用<br>
-                        • 自主練習時のポジション確認</p>
-                    </div>
-                </div>
-
-                <div class="explanation">
-                    <h3>🔥 チーム力向上のために</h3>
-                    <p>各ローテーションでの<strong>サーブレシーブ</strong>と<strong>スパイクレシーブ</strong>の違いを意識して、状況に応じた正確なポジショニングを心がけましょう！</p>
-                </div>
-
-                <div style="text-align: center; margin-top: 20px; padding: 15px; background: linear-gradient(45deg, #43e97b, #38f9d7); border-radius: 12px; color: white;">
-                    <h3 style="margin: 0 0 8px 0; font-size: 16px;">🏐 頑張ろう！</h3>
-                    <p style="margin: 0; font-size: 13px;">次はインタラクティブ練習ページ →</p>
-                </div>
-            `;
-
-            return slide;
-        }
-
-        function createInteractiveSlide() {
-            const slide = document.createElement('div');
-            slide.className = 'slide';
-            slide.id = 'slide15';
-            slide.style.display = 'none';
-
-            slide.innerHTML = `
-                <div class="slide-header">
-                    <div class="slide-number">15</div>
-                    <h2 class="slide-title">🎮 インタラクティブ<br>フォーメーション練習</h2>
-                    <p class="slide-subtitle">プレイヤーをタップして移動できます</p>
-                </div>
-
-                <div style="text-align: center; margin: 10px 0;">
-                    <button class="nav-btn" onclick="resetToBasic()" style="margin: 5px;">基本配置</button>
-                    <button class="nav-btn" onclick="resetToServeReceive()" style="margin: 5px;">サーブレシーブ</button>
-                    <button class="nav-btn" onclick="resetToSpikeReceive()" style="margin: 5px;">スパイクレシーブ</button>
-                </div>
-
-                <div class="court" id="interactiveCourt" style="touch-action: none;">
-                    <div class="net-label">ネット</div>
-                    <div class="front-zone">
-                        <div class="front-label">前衛</div>
-                    </div>
-                    <div class="back-label">後衛</div>
-                    
-                    <div class="player male draggable" id="player-サイヤ" style="left: 20%; top: 25%;">サイヤ</div>
-                    <div class="player setter draggable" id="player-たけちゃん" style="left: 50%; top: 25%;">たけ</div>
-                    <div class="player female draggable" id="player-みく" style="left: 80%; top: 25%;">みく</div>
-                    <div class="player female draggable" id="player-ゆき" style="left: 20%; top: 75%;">ゆき</div>
-                    <div class="player male draggable" id="player-くにみつ" style="left: 50%; top: 75%;">くに</div>
-                    <div class="player male draggable" id="player-たい" style="left: 80%; top: 75%;">たい</div>
-                </div>
-
-                <div class="explanation">
-                    <h3>🎯 使い方</h3>
-                    <p>プレイヤーを<strong>タップ&ドラッグ</strong>して自由に配置変更できます。上のボタンで基本フォーメーションに戻せます。</p>
-                </div>
-
-                <div class="key-points">
-                    <h4>💡 練習のコツ</h4>
-                    <ul>
-                        <li>実際の試合を想定して配置を試してみよう</li>
-                        <li>チームメンバーと一緒に最適な配置を考えよう</li>
-                        <li>相手の攻撃パターンに応じた守備を練習しよう</li>
-                    </ul>
-                </div>
-            `;
-
-            return slide;
-        }
-
-        // 初期化
-        document.addEventListener('DOMContentLoaded', function () {
-            createRotationSlides();
-            showSlide(1);
-
-            // インタラクティブ機能の初期化（少し遅延させる）
-            setTimeout(() => {
-                initDragFunctionality();
-            }, 500);
-        });
 
         // キーボード操作
-        document.addEventListener('keydown', function (e) {
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'ArrowLeft') prevSlide();
             if (e.key === 'ArrowRight') nextSlide();
         });
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            showSlide(1);
+        });
     </script>
 </body>
-
 </html>
