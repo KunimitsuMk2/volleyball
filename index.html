@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バレーボール フォーメーション（最終版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+
+        .slide {
+            width: 375px;
+            height: 812px;
+            background: white;
+            margin: 20px auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #ff6b6b, #ffa500, #43e97b, #4facfe);
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .slide-number {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 15px;
+            font-size: 18px;
+        }
+
+        .slide-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .slide-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        /* 自陣コート（縦向き、ネット上部） */
+        .court {
+            width: 260px;
+            height: 280px;
+            border: 3px solid #333;
+            position: relative;
+            background: linear-gradient(to bottom, #e8f5e8, #d4e5d4);
+            margin: 15px auto;
+            border-radius: 8px;
+            border-top: 6px solid #333; /* ネット */
+            touch-action: none;
+        }
+
+        .net-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .front-zone {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            border-bottom: 2px dashed #999;
+        }
+
+        .front-label {
+            position: absolute;
+            top: 15px;
+            right: 10px;
+            background: rgba(255,255,255,0.8);
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+        }
+
+        .back-label {
+            position: absolute;
+            bottom: 15px;
+            right: 10px;
+            background: rgba(255,255,255,0.8);
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+        }
+
+        .player {
+            position: absolute;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 11px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            transform: translate(-50%, -50%);
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .player.male {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        }
+
+        .player.female {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+        }
+
+        .player.setter {
+            background: linear-gradient(45deg, #43e97b, #38f9d7);
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 2px #43e97b;
+            animation: pulse 2s infinite;
+        }
+
+        .player.draggable {
+            cursor: grab;
+            z-index: 10;
+        }
+
+        .player.draggable:active {
+            cursor: grabbing;
+            z-index: 20;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .player.draggable.dragging {
+            z-index: 30;
+            transform: translate(-50%, -50%) scale(1.2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 2px #43e97b, 0 0 0 0 rgba(67, 233, 123, 0.7); }
+            70% { box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 2px #43e97b, 0 0 0 8px rgba(67, 233, 123, 0); }
+            100% { box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 2px #43e97b, 0 0 0 0 rgba(67, 233, 123, 0); }
+        }
+
+        .explanation {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 12px 0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .explanation h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .key-points {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 12px 0;
+            border-left: 4px solid #4facfe;
+        }
+
+        .key-points h4 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .key-points ul {
+            margin: 0;
+            padding-left: 16px;
+        }
+
+        .key-points li {
+            margin: 5px 0;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        .rule-section {
+            background: white;
+            border: 2px solid #4facfe;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .rule-section h4 {
+            color: #4facfe;
+            margin: 0 0 8px 0;
+            font-size: 14px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+
+        .legend-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-color {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .male-color { background: linear-gradient(45deg, #4facfe, #00f2fe); }
+        .female-color { background: linear-gradient(45deg, #ff6b6b, #ffa500); }
+        .setter-color { background: linear-gradient(45deg, #43e97b, #38f9d7); }
+
+        .navigation {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: 初期ローテーション確認 -->
+    <div class="slide" id="slide1">
+        <div class="slide-header">
+            <div class="slide-number">1</div>
+            <h2 class="slide-title">🏐 初期ローテーション</h2>
+            <p class="slide-subtitle">基本配置・スタートポジション</p>
+        </div>
+
+        <div class="court">
+            <div class="net-label">ネット</div>
+            <div class="front-zone">
+                <div class="front-label">前衛</div>
+            </div>
+            <div class="back-label">後衛</div>
+            
+            <!-- ポジション4: サイヤ -->
+            <div class="player male" style="left: 20%; top: 25%;">サイヤ</div>
+            
+            <!-- ポジション3: たけちゃん -->
+            <div class="player setter" style="left: 50%; top: 25%;">たけ</div>
+            
+            <!-- ポジション2: みく -->
+            <div class="player female" style="left: 80%; top: 25%;">みく</div>
+            
+            <!-- ポジション5: ゆき -->
+            <div class="player female" style="left: 20%; top: 75%;">ゆき</div>
+            
+            <!-- ポジション6: くにみつ -->
+            <div class="player male" style="left: 50%; top: 75%;">くに</div>
+            
+            <!-- ポジション1: たい -->
+            <div class="player male" style="left: 80%; top: 75%;">たい</div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color male-color"></div>
+                <span>男性</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color female-color"></div>
+                <span>女性</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color setter-color"></div>
+                <span>セッター</span>
+            </div>
+        </div>
+
+        <div class="explanation">
+            <h3>🎯 初期ローテーションの特徴</h3>
+            <p>セッター（たけちゃん）が前衛中央にいるため、<strong>両サイドへの配球</strong>が可能。左のサイヤ、右のみくへバランス良く攻撃を展開できる基本フォーメーション。</p>
+        </div>
+
+        <div class="key-points">
+            <h4>📋 基本役割</h4>
+            <ul>
+                <li><strong>サイヤ（④）：</strong>レフトアタッカー・ブロック</li>
+                <li><strong>たけちゃん（③）：</strong>セッター・センターアタック</li>
+                <li><strong>みく（②）：</strong>ライトアタッカー・ブロック</li>
+                <li><strong>ゆき・くにみつ・たい：</strong>レシーブ・カバー</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- スライド2: サーブレシーブフォーメーション -->
+    <div class="slide" id="slide2" style="display: none;">
+        <div class="slide-header">
+            <div class="slide-number">2</div>
+            <h2 class="slide-title">🏐 サーブレシーブ<br>フォーメーション</h2>
+            <p class="slide-subtitle">頑張ってあげようサーブレシーブ</p>
+        </div>
+
+        <div class="court">
+            <div class="net-label">ネット（相手サーブ）</div>
+            <div class="front-zone">
+                <div class="front-label">前衛</div>
+            </div>
+            <div class="back-label">後衛</div>
+            
+            <!-- サイヤ：レフト攻撃準備 -->
+            <div class="player male" style="left: 15%; top: 40%;">サイヤ</div>
+            
+            <!-- みく：センター（BクイックやAクイック） -->
+            <div class="player female" style="left: 55%; top: 40%;">みく</div>
+            
+            <!-- たけちゃん：セッター（ネット際移動準備） -->
+            <div class="player setter" style="left: 40%; top: 15%;">たけ</div>
+            
+            <!-- たい：W型レシーブ左 -->
+            <div class="player male" style="left: 90%; top: 50%;">たい</div>
+            
+            <!-- ゆき：W型レシーブ右下 -->
+            <div class="player female" style="left: 30%; top: 70%;">ゆき</div>
+            
+            <!-- くにみつ：バックアタック準備・W型レシーブ右 -->
+            <div class="player male" style="left: 70%; top: 70%;">くに</div>
+        </div>
+
+        <div class="explanation">
+            <h3>🎯 頑張ってあげようサーブレシーブ</h3>
+            <p><strong>後衛3人で基本的にレシーブ、前二人は攻撃準備</strong>、前衛は多彩な攻撃パターンを準備。セッターが素早くネット際へ移動してセットアップ。</p>
+        </div>
+
+        <div class="key-points">
+            <h4>📋 役割分担</h4>
+            <ul>
+                <li><strong>サイヤ：</strong>レフト攻撃準備</li>
+                <li><strong>みく：</strong>センター攻撃（BクイックやAクイックまたはブロード）</li>
+                <li><strong>たけちゃん：</strong>ネット際移動・セット</li>
+                <li><strong>たい：</strong>バックアタック準備・レシーブ</li>
+                <li><strong>くにみつ・ゆき：</strong>レシーブ</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- スライド3: 2枚ブロック時のスパイクレシーブ -->
+    <div class="slide" id="slide3" style="display: none;">
+        <div class="slide-header">
+            <div class="slide-number">3</div>
+            <h2 class="slide-title">2枚ブロック時<br>スパイクレシーブ</h2>
+            <p class="slide-subtitle">基本の守備フォーメーション</p>
+        </div>
+
+        <div class="court">
+            <div class="net-label">ネット（相手レフト攻撃）</div>
+            <div class="front-zone">
+                <div class="front-label">前衛（ブロック）</div>
+            </div>
+            <div class="back-label">後衛（レシーブ）</div>
+            
+            <!-- サイヤ・みく：2枚ブロック（クロス閉め） -->
+            <div class="player male" style="left: 55%; top: 8%;">サイヤ</div>
+            <div class="player female" style="left: 70%; top: 8%;">みく</div>
+            
+            <!-- たけちゃん：カバー -->
+            <div class="player setter" style="left: 60%; top: 30%;">たけ</div>
+            
+            <!-- たい：クロス守備（左側） -->
+            <div class="player male" style="left: 15%; top: 55%;">たい</div>
+            
+            <!-- ゆき：センター守備（真ん中） -->
+            <div class="player female" style="left: 35%; top: 80%;">ゆき</div>
+            
+            <!-- くにみつ：ストレート守備（右側） -->
+            <div class="player male" style="left: 85%; top: 70%;">くに</div>
+        </div>
+
+        <div class="explanation">
+            <h3>🛡️ 2枚ブロック時の守備</h3>
+            <p>相手レフト攻撃に対する基本守備。<strong>ブロック2人がクロスを閉める！</strong>、前が男子２枚の時は男子でブロック。残りの女子がたけちゃんのポジ</p>
+        </div>
+
+        <div class="key-points">
+            <h4>📋 戦術的役割分担</h4>
+            <ul>
+                <li><strong>サイヤ・みく：</strong>ブロック（クロス閉め）</li>
+                <li><strong>たけちゃん：</strong>前衛カバー・セッター準備</li>
+                <li><strong>くにみつ：</strong>ストレート対応（右側）</li>
+                <li><strong>ゆき：</strong>（ワンタッチなどのフォロー）</li>
+                <li><strong>たい：</strong>クロス守備（強打レシーブポジ）</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- スライド4: 1枚ブロック時のスパイクレシーブ -->
+    <div class="slide" id="slide4" style="display: none;">
+        <div class="slide-header">
+            <div class="slide-number">4</div>
+            <h2 class="slide-title">1枚ブロック時<br>スパイクレシーブ</h2>
+            <p class="slide-subtitle">間に合わない場合の守備</p>
+        </div>
+
+        <div class="court">
+            <div class="net-label">ネット（相手攻撃）</div>
+            <div class="front-zone">
+                <div class="front-label">前衛</div>
+            </div>
+            <div class="back-label">後衛</div>
+            
+            <!-- サイヤ：前衛左（攻撃準備） -->
+            <div class="player male" style="left: 30%; top: 20%;">サイヤ</div>
+            
+            <!-- みく：1人ブロック -->
+            <div class="player female" style="left: 75%; top: 8%;">みく</div>
+            
+            <!-- たけちゃん：カバー・つなぎ役（前衛中央やや後ろ） -->
+            <div class="player setter" style="left: 60%; top: 30%;">たけ</div>
+            
+            <!-- たい：後衛レシーブ左 -->
+            <div class="player male" style="left: 15%; top: 55%;">たい</div>
+            
+            <!-- くにみつ：後衛レシーブ右 -->
+            <div class="player male" style="left: 85%; top: 70%;">くに</div>
+            
+            <!-- ゆき：後衛レシーブ中央後 -->
+            <div class="player female" style="left: 35%; top: 80%;">ゆき</div>
+        </div>
+
+        <div class="explanation">
+            <h3>🛡️ 1枚ブロック時の守備</h3>
+            <p>ブロックが間に合わない時の対応。<strong>1人でブロック(クロス意識）</strong>、間に合わなかったら切り替えてレシーブ体制に入ろう！</p>
+        </div>
+
+        <div class="key-points">
+            <h4>📋 各自の役割</h4>
+            <ul>
+                <li><strong>みく：</strong>1人ブロック（コース限定）がんばろう</li>
+                <li><strong>サイヤ：</strong>左でレシーブ体制がんばろう</li>
+                <li><strong>たけちゃん：</strong>カバー・つなぎ・セッター準備頑張ろう</li>
+                <li><strong>後衛3人：</strong>スパイクレシーブ・拾いがんばろう</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- スライド5: まとめ・注意点 -->
+    <div class="slide" id="slide5" style="display: none;">
+        <div class="slide-header">
+            <div class="slide-number">5</div>
+            <h2 class="slide-title">まとめ・注意点</h2>
+            <p class="slide-subtitle">練習で意識すること</p>
+        </div>
+
+        <div class="key-points">
+            <h4>🎯 練習のポイント</h4>
+            <ul>
+                <li><strong>サーブレシーブ：</strong>頑張ってあげようを徹底</li>
+                <li><strong>2枚ブロック：</strong>クロス閉めを意識</li>
+                <li><strong>1枚ブロック：</strong>各自の役割分担を練習</li>
+                <li><strong>セッター：</strong>たけちゃんの動きを全員で把握</li>
+                <li><strong>スパイク：</strong>ミスってもいいので打って返そう</li>
+            </ul>
+        </div>
+
+
+        <div class="explanation">
+            <h3>🔥 チーム力向上のために</h3>
+            <p>基本的な<strong>3つのフォーメーション</strong>をしっかり覚えて、状況に応じた正確なポジショニングを心がけましょう！</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; padding: 15px; background: linear-gradient(45deg, #43e97b, #38f9d7); border-radius: 12px; color: white;">
+            <h3 style="margin: 0 0 8px 0; font-size: 16px;">🏐 頑張ろう！</h3>
+            <p style="margin: 0; font-size: 13px;">次はインタラクティブ練習ページ →</p>
+        </div>
+    </div>
+
+    <!-- スライド6: インタラクティブ練習 -->
+    <div class="slide" id="slide6" style="display: none;">
+        <div class="slide-header">
+            <div class="slide-number">6</div>
+            <h2 class="slide-title">🎮 インタラクティブ<br>フォーメーション練習</h2>
+            <p class="slide-subtitle">プレイヤーをタップして移動できます</p>
+        </div>
+
+        <div style="text-align: center; margin: 10px 0;">
+            <button class="nav-btn" onclick="resetToBasic()" style="margin: 3px; padding: 8px 15px; font-size: 12px;">基本配置</button>
+            <button class="nav-btn" onclick="resetToServeReceive()" style="margin: 3px; padding: 8px 15px; font-size: 12px;">サーブレシーブ</button>
+            <button class="nav-btn" onclick="resetToSpikeReceive()" style="margin: 3px; padding: 8px 15px; font-size: 12px;">2枚ブロック</button>
+            <button class="nav-btn" onclick="resetToOneBlock()" style="margin: 3px; padding: 8px 15px; font-size: 12px;">1枚ブロック</button>
+        </div>
+
+        <div class="court" id="interactiveCourt">
+            <div class="net-label">ネット</div>
+            <div class="front-zone">
+                <div class="front-label">前衛</div>
+            </div>
+            <div class="back-label">後衛</div>
+            
+            <div class="player male draggable" id="player-サイヤ" style="left: 20%; top: 25%;">サイヤ</div>
+            <div class="player setter draggable" id="player-たけちゃん" style="left: 50%; top: 25%;">たけ</div>
+            <div class="player female draggable" id="player-みく" style="left: 80%; top: 25%;">みく</div>
+            <div class="player female draggable" id="player-ゆき" style="left: 20%; top: 75%;">ゆき</div>
+            <div class="player male draggable" id="player-くにみつ" style="left: 50%; top: 75%;">くに</div>
+            <div class="player male draggable" id="player-たい" style="left: 80%; top: 75%;">たい</div>
+        </div>
+
+        <div class="explanation">
+            <h3>🎯 使い方</h3>
+            <p>プレイヤーを<strong>タップ&ドラッグ</strong>して自由に配置変更できます。上のボタンで各フォーメーションに切り替え可能。</p>
+        </div>
+
+        <div class="key-points">
+            <h4>💡 練習のコツ</h4>
+            <ul>
+                <li>実際の試合を想定して配置を試してみよう</li>
+                <li>チームメンバーと一緒に最適な配置を考えよう</li>
+                <li>相手の攻撃パターンに応じた守備を練習しよう</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="prevSlide()" id="prevBtn">◀ 前へ</button>
+        <span id="slideCounter">1 / 6</span>
+        <button class="nav-btn" onclick="nextSlide()" id="nextBtn">次へ ▶</button>
+    </div>
+
+    <p style="text-align: center; margin: 20px 0; color: #666; font-size: 13px;">
+        💡 各スライドを画像として保存してLINEで共有できます<br>
+        （右クリック → 「画像を保存」）
+    </p>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 6;
+
+        // ドラッグ機能の変数
+        let isDragging = false;
+        let currentDragElement = null;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        function showSlide(slideNum) {
+            // 全スライドを非表示
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.style.display = 'none';
+            });
+            
+            // 指定されたスライドを表示
+            const targetSlide = document.getElementById(`slide${slideNum}`);
+            if (targetSlide) {
+                targetSlide.style.display = 'block';
+            }
+            
+            // ナビゲーション更新
+            document.getElementById('slideCounter').textContent = `${slideNum} / ${totalSlides}`;
+            document.getElementById('prevBtn').disabled = slideNum === 1;
+            document.getElementById('nextBtn').disabled = slideNum === totalSlides;
+            
+            currentSlide = slideNum;
+            
+            // インタラクティブページの場合、ドラッグ機能を初期化
+            if (slideNum === 6) {
+                setTimeout(initDragFunctionality, 100);
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // ドラッグ機能の初期化
+        function initDragFunctionality() {
+            const court = document.getElementById('interactiveCourt');
+            if (!court) return;
+
+            court.addEventListener('mousedown', handleStart);
+            court.addEventListener('touchstart', handleStart, { passive: false });
+            
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('touchmove', handleMove, { passive: false });
+            
+            document.addEventListener('mouseup', handleEnd);
+            document.addEventListener('touchend', handleEnd);
+        }
+
+        function handleStart(e) {
+            e.preventDefault();
+            const target = e.target;
+            
+            if (target.classList.contains('draggable')) {
+                isDragging = true;
+                currentDragElement = target;
+                target.classList.add('dragging');
+                
+                const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+                const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
+                
+                const rect = target.getBoundingClientRect();
+                offsetX = clientX - rect.left - rect.width / 2;
+                offsetY = clientY - rect.top - rect.height / 2;
+            }
+        }
+
+        function handleMove(e) {
+            if (!isDragging || !currentDragElement) return;
+            
+            e.preventDefault();
+            
+            const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
+            
+            const court = document.getElementById('interactiveCourt');
+            const courtRect = court.getBoundingClientRect();
+            
+            // コート内での相対位置を計算
+            const relativeX = clientX - courtRect.left - offsetX;
+            const relativeY = clientY - courtRect.top - offsetY;
+            
+            // パーセンテージに変換（コート境界内に制限）
+            const percentX = Math.max(5, Math.min(95, (relativeX / courtRect.width) * 100));
+            const percentY = Math.max(5, Math.min(95, (relativeY / courtRect.height) * 100));
+            
+            currentDragElement.style.left = percentX + '%';
+            currentDragElement.style.top = percentY + '%';
+        }
+
+        function handleEnd(e) {
+            if (isDragging && currentDragElement) {
+                currentDragElement.classList.remove('dragging');
+                currentDragElement = null;
+                isDragging = false;
+            }
+        }
+
+        // プリセット配置関数
+        function resetToBasic() {
+            const players = [
+                { id: 'player-サイヤ', x: 20, y: 25 },
+                { id: 'player-たけちゃん', x: 50, y: 25 },
+                { id: 'player-みく', x: 80, y: 25 },
+                { id: 'player-ゆき', x: 20, y: 75 },
+                { id: 'player-くにみつ', x: 50, y: 75 },
+                { id: 'player-たい', x: 80, y: 75 }
+            ];
+            
+            players.forEach(player => {
+                const element = document.getElementById(player.id);
+                if (element) {
+                    element.style.left = player.x + '%';
+                    element.style.top = player.y + '%';
+                }
+            });
+        }
+
+        function resetToServeReceive() {
+            const players = [
+                { id: 'player-サイヤ', x: 20, y: 25 },
+                { id: 'player-たけちゃん', x: 50, y: 15 },
+                { id: 'player-みく', x: 80, y: 25 },
+                { id: 'player-たい', x: 25, y: 65 },
+                { id: 'player-ゆき', x: 75, y: 65 },
+                { id: 'player-くにみつ', x: 50, y: 80 }
+            ];
+            
+            players.forEach(player => {
+                const element = document.getElementById(player.id);
+                if (element) {
+                    element.style.left = player.x + '%';
+                    element.style.top = player.y + '%';
+                }
+            });
+        }
+
+        function resetToSpikeReceive() {
+            const players = [
+                { id: 'player-サイヤ', x: 55, y: 8 },
+                { id: 'player-たけちゃん', x: 40, y: 28 },
+                { id: 'player-みく', x: 70, y: 8 },
+                { id: 'player-たい', x: 15, y: 70 },
+                { id: 'player-ゆき', x: 50, y: 85 },
+                { id: 'player-くにみつ', x: 85, y: 70 }
+            ];
+            
+            players.forEach(player => {
+                const element = document.getElementById(player.id);
+                if (element) {
+                    element.style.left = player.x + '%';
+                    element.style.top = player.y + '%';
+                }
+            });
+        }
+
+        function resetToOneBlock() {
+            const players = [
+                { id: 'player-サイヤ', x: 30, y: 25 },
+                { id: 'player-たけちゃん', x: 50, y: 40 },
+                { id: 'player-みく', x: 70, y: 8 },
+                { id: 'player-たい', x: 20, y: 75 },
+                { id: 'player-ゆき', x: 50, y: 85 },
+                { id: 'player-くにみつ', x: 75, y: 75 }
+            ];
+            
+            players.forEach(player => {
+                const element = document.getElementById(player.id);
+                if (element) {
+                    element.style.left = player.x + '%';
+                    element.style.top = player.y + '%';
+                }
+            });
+        }
+
+        // キーボード操作
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            showSlide(1);
+        });
+    </script>
+</body>
+</html>
